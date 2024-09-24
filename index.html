@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS2 to CS:GO Rank Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            max-width: 500px;
+        }
+        h1 {
+            color: #333;
+        }
+        input {
+            padding: 10px;
+            width: 200px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+        .rank-list {
+            margin-top: 30px;
+            text-align: left;
+            font-size: 16px;
+        }
+        .rank-item {
+            padding: 10px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+        }
+        .highlight {
+            background-color: #28a745;
+            color: white;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>CS2 to CS:GO Rank Converter</h1>
+        <p>Enter your CS2 rank points:</p>
+        <input type="number" id="cs2Points" placeholder="CS2 Points">
+        <br>
+        <button onclick="convertRank()">Convert to CS:GO Rank</button>
+
+        <div class="result" id="result"></div>
+        <div class="rank-list" id="rankList"></div>
+    </div>
+
+    <script>
+        function convertRank() {
+            const cs2Points = parseInt(document.getElementById('cs2Points').value);
+            const resultElement = document.getElementById('result');
+            const rankListElement = document.getElementById('rankList');
+
+            if (isNaN(cs2Points)) {
+                resultElement.innerHTML = "Please enter a valid number.";
+                return;
+            }
+
+            const csgoRanks = [
+                {name: "Silver I", min: 1000, max: 3754},
+                {name: "Silver II", min: 3754, max: 4997},
+                {name: "Silver III", min: 4997, max: 5723},
+                {name: "Silver IV", min: 5723, max: 6855},
+                {name: "Silver Elite", min: 6855, max: 7950},
+                {name: "Silver Elite Master", min: 7950, max: 9216},
+                {name: "Gold Nova I", min: 9216, max: 9999},
+                {name: "Gold Nova II", min: 9999, max: 11136},
+                {name: "Gold Nova III", min: 11136, max: 12136},
+                {name: "Gold Nova Master", min: 12136, max: 13106},
+                {name: "Master Guardian I", min: 13106, max: 14304},
+                {name: "Master Guardian II", min: 14304, max: 15114},
+                {name: "Master Guardian Elite", min: 15114, max: 16236},
+                {name: "Distinguished Master Guardian", min: 16236, max: 17259},
+                {name: "Legendary Eagle", min: 17259, max: 18126},
+                {name: "Legendary Eagle Master", min: 18126, max: 19847},
+                {name: "Supreme Master First Class", min: 19847, max: 21847},
+                {name: "Global Elite", min: 21847, max: 30000}
+            ];
+
+            let csgoRank = "Unranked";
+
+            // Find the corresponding CS:GO rank based on CS2 points
+            for (let rank of csgoRanks) {
+                if (cs2Points >= rank.min && cs2Points < rank.max) {
+                    csgoRank = rank.name;
+                    break;
+                }
+            }
+
+            // Global Elite if points are over 30,000
+            if (cs2Points >= 30000) {
+                csgoRank = "Global Elite";
+            }
+
+            resultElement.innerHTML = `The corresponding CS:GO rank is: <strong>${csgoRank}</strong>`;
+
+            // Show all ranks and highlight the current one
+            let rankListHtml = '';
+            csgoRanks.forEach(rank => {
+                const isCurrentRank = cs2Points >= rank.min && cs2Points < rank.max || (rank.name === "Global Elite" && cs2Points >= 30000);
+                rankListHtml += `<div class="rank-item ${isCurrentRank ? 'highlight' : ''}">
+                    ${rank.name}: ${rank.min} - ${rank.max} points
+                </div>`;
+            });
+
+            rankListElement.innerHTML = rankListHtml;
+        }
+    </script>
+
+</body>
+</html>
